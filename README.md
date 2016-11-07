@@ -1,4 +1,4 @@
-# toby_spring_study_hyunsoo
+# toby_spring_study
 
 토비의 스프링 3.1 스터디
 
