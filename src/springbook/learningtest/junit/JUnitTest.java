@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/junit.xml")
+// @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JUnitTest {
 
 	@Autowired
@@ -35,85 +36,68 @@ public class JUnitTest {
 	/* Third Test */
 	static ApplicationContext contextObject = null;
 
-	@Test	
-	public void firstTest1() {
+	@Test
+	public void test1() {
 		System.out.println("before first-test1 : " + testObject);
 		assertThat(this, is(not(sameInstance(testObject))));
 		testObject = this;
 		System.out.println("after first-test1 : " + testObject);
 		System.out.println();
-	}
 
-	@Test
-	public void firstTest2() {
-		System.out.println("before first-test2 : " + testObject);
-		assertThat(this, is(not(sameInstance(testObject))));
-		testObject = this;
-		System.out.println("after first-test2 : " + testObject);
-		System.out.println();
-	}
-
-	@Test
-	public void firstTest3() {
-		/* First Test */
-		System.out.println("before first-test3 : " + testObject);
-		assertThat(this, is(not(sameInstance(testObject))));
-		testObject = this;
-		System.out.println("after first-test3 : " + testObject);
-		System.out.println();
-	}
-	
-	@Test
-	public void secondTest1() {
 		System.out.println("before second-test1 : " + testObjects);
 		assertThat(testObjects, not(hasItem(this)));
 		testObjects.add(this);
 		System.out.println("after second-test1 : " + testObjects);
 		System.out.println();
-	}
-	
-	@Test
-	public void secondTest2() {
-		System.out.println("before second-test2 : " + testObjects);
-		assertThat(testObjects, not(hasItem(this)));
-		testObjects.add(this);
-		System.out.println("after second-test2 : " + testObjects);
-		System.out.println();
-	}
-	
-	@Test
-	public void secondTest3() {
-		System.out.println("before second-test3 : " + testObjects);
-		assertThat(testObjects, not(hasItem(this)));
-		testObjects.add(this);
-		System.out.println("after second-test3 : " + testObjects);
-		System.out.println();
-	}
-	
-	@Test
-	public void thirdTest1() {
+
 		System.out.println("before third-test1 : " + contextObject);
 		assertThat(contextObject == null || contextObject == this.context, is(true));
 		contextObject = this.context;
 		System.out.println("after third-test1 : " + contextObject);
 		System.out.println();
 	}
-	
+
 	@Test
-	public void thirdTest2() {
+	public void test2() {
+		System.out.println("before first-test2 : " + testObject);
+		assertThat(this, is(not(sameInstance(testObject))));
+		testObject = this;
+		System.out.println("after first-test2 : " + testObject);
+		System.out.println();
+
+		System.out.println("before second-test2 : " + testObjects);
+		assertThat(testObjects, not(hasItem(this)));
+		testObjects.add(this);
+		System.out.println("after second-test2 : " + testObjects);
+		System.out.println();
+
 		System.out.println("before third-test2 : " + contextObject);
 		assertTrue(contextObject == null || contextObject == this.context);
 		contextObject = this.context;
 		System.out.println("after third-test2 : " + contextObject);
 		System.out.println();
 	}
-	
+
 	@Test
-	public void thirdTest3() {
+	public void test3() {
+		/* First Test */
+		System.out.println("before first-test3 : " + testObject);
+		assertThat(this, is(not(sameInstance(testObject))));
+		testObject = this;
+		System.out.println("after first-test3 : " + testObject);
+		System.out.println();
+
+		System.out.println("before second-test3 : " + testObjects);
+		assertThat(testObjects, not(hasItem(this)));
+		testObjects.add(this);
+		System.out.println("after second-test3 : " + testObjects);
+		System.out.println();
+
 		System.out.println("before third-test3 : " + contextObject);
 		assertThat(contextObject, either(is(nullValue())).or(is(this.context)));
 		contextObject = this.context;
 		System.out.println("after third-test3 : " + contextObject);
 		System.out.println();
 	}
+
 }
