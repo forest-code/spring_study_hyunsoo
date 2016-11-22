@@ -11,7 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 
 import springbook.user.domain.User;
 
-public abstract class UserDao {
+public class UserDao {
 	private DataSource dataSource;
 
 	public void setDataSource(DataSource dataSource) {
@@ -19,17 +19,8 @@ public abstract class UserDao {
 	}
 
 	public void add(User user) throws SQLException {
-		Connection c = this.dataSource.getConnection();
-
-		PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values(?,?,?)");
-		ps.setString(1, user.getId());
-		ps.setString(2, user.getName());
-		ps.setString(3, user.getPassword());
-
-		ps.executeUpdate();
-
-		ps.close();
-		c.close();
+		StatementStrategy st = new AddStatement(user);
+		jdbcContextWithStatementStrategy(st);
 	}
 
 	public User get(String id) throws SQLException {
@@ -69,8 +60,6 @@ public abstract class UserDao {
 		StatementStrategy st = new DeleteAllStatement();
 		jdbcContextWithStatementStrategy(st);
 	}
-	
-	abstract protected PreparedStatement makeStatement(Connection c) throws SQLException;
 	
 	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
 		Connection c = null;

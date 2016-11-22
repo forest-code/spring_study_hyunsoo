@@ -23,3 +23,9 @@ create table users (
 	name varchar(20) not null,
 	password varchar(10) not null
 );
+
+-- user setting
+create user 'spring'@'localhost' identified by 'book';
+grant all on springbook.* to 'spring'@'localhost';
+grant all on testdb.* to 'spring'@'localhost';
+flush privileges;
