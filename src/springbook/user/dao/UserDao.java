@@ -19,9 +19,10 @@ public class UserDao {
 	}
 
 	public void add(final User user) throws SQLException {
-		class AddStatement implements StatementStrategy {
+		jdbcContextWithStatementStrategy(new StatementStrategy() {
+
 			@Override
-			public PreparedStatement makePreparedStatument(Connection c) throws SQLException {
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
 				PreparedStatement ps = c.prepareStatement("insert into users(id, name, password) values (?,?,?)");
 				ps.setString(1, user.getId());
 				ps.setString(2, user.getName());
@@ -29,10 +30,7 @@ public class UserDao {
 
 				return ps;
 			}
-		}
-		
-		StatementStrategy st = new AddStatement();
-		jdbcContextWithStatementStrategy(st);
+		});
 	}
 
 	public User get(String id) throws SQLException {
@@ -42,14 +40,6 @@ public class UserDao {
 
 		ResultSet rs = ps.executeQuery();
 
-		/* Before */
-		// rs.next();
-		// User user = new User();
-		// user.setId(rs.getString("id"));
-		// user.setName(rs.getString("name"));
-		// user.setPassword(rs.getString("password"));
-
-		/* After */
 		User user = null;
 		if (rs.next()) {
 			user = new User();
@@ -69,36 +59,13 @@ public class UserDao {
 	}
 
 	public void deleteAll() throws SQLException {
-		StatementStrategy st = new DeleteAllStatement();
-		jdbcContextWithStatementStrategy(st);
-	}
-	
-	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
-		Connection c = null;
-		PreparedStatement ps = null;
+		jdbcContextWithStatementStrategy(new StatementStrategy() {
 
-		try {
-			c = dataSource.getConnection();
-			
-			ps = stmt.makePreparedStatument(c);
-			
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-				}
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				return c.prepareStatement("delete from users");
 			}
-			if (c != null) {
-				try {
-					c.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
+		});
 	}
 
 	public int getCount() throws SQLException {
@@ -134,6 +101,34 @@ public class UserDao {
 					c.close();
 				} catch (SQLException e) {
 
+				}
+			}
+		}
+	}
+
+	public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLException {
+		Connection c = null;
+		PreparedStatement ps = null;
+
+		try {
+			c = dataSource.getConnection();
+
+			ps = stmt.makePreparedStatement(c);
+
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+				}
+			}
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
 				}
 			}
 		}
