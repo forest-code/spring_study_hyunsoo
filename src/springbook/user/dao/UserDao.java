@@ -6,10 +6,14 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.mysql.jdbc.MysqlErrorNumbers;
+
 import springbook.user.domain.User;
+import springbook.user.exception.DuplicateUserIdException;
 
 public class UserDao {
 
@@ -19,19 +23,23 @@ public class UserDao {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	public void add(final User user) throws SQLException {
-		this.jdbcTemplate.update("insert into users(id, name, password) values (?,?,?)", user.getId(), user.getName(), user.getPassword());
+	public void add(final User user) throws DuplicateUserIdException {
+		try {
+			this.jdbcTemplate.update("insert into users(id, name, password) values (?,?,?)", user.getId(), user.getName(), user.getPassword());
+		} catch(DuplicateKeyException e) {
+			throw new DuplicateUserIdException(e);
+		}
 	}
 
-	public void deleteAll() throws SQLException {
+	public void deleteAll() {
 		this.jdbcTemplate.update("delete from users");
 	}
 
-	public User get(String id) throws SQLException {
+	public User get(String id) {
 		return this.jdbcTemplate.queryForObject("select * from users where id = ?", new Object[] { id }, this.userMapper);
 	}
 
-	public int getCount() throws SQLException {
+	public int getCount() {
 		return this.jdbcTemplate.queryForInt("select count(*) from users");
 	}
 
