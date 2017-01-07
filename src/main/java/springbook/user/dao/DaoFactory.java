@@ -23,7 +23,7 @@ public class DaoFactory {
 	@Bean
 	public UserDao userDao() {
 		UserDao userDao = new UserDao();
-		userDao.setJdbcTemplate(dataSource());
+		userDao.setDataSource(this.dataSource());
 		return userDao;
 	}
 }

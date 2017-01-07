@@ -12,7 +12,7 @@
 	</bean>
 
 	<bean id="userDao" class="springbook.user.dao.UserDao">
-		<property name="datasource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
 </beans>
