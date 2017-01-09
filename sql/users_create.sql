@@ -29,3 +29,8 @@ create user 'spring'@'localhost' identified by 'book';
 grant all on springbook.* to 'spring'@'localhost';
 grant all on testdb.* to 'spring'@'localhost';
 flush privileges;
+
+-- add column for user level
+alter table users add column level tinyint not null;
+alter table users add column login int not null;
+alter table users add column recommend int not null;
