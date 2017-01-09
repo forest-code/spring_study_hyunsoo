@@ -20,6 +20,7 @@ import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,7 +29,7 @@ public class UserDaoTest {
 
 	@Autowired
 	private UserDao dao;
-	
+
 	@Autowired
 	private DataSource dataSource;
 
@@ -38,9 +39,9 @@ public class UserDaoTest {
 
 	@Before
 	public void setUp() {
-		this.user1 = new User("gyumee", "박성철", "springno1");
-		this.user2 = new User("leegw700", "이길원", "springno2");
-		this.user3 = new User("bumjin", "박범진", "springno3");
+		this.user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
+		this.user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
+		this.user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
 	}
 
 	@Test
@@ -54,12 +55,10 @@ public class UserDaoTest {
 		assertThat(dao.getCount(), is(2));
 
 		User userget1 = dao.get(user1.getId());
-		assertThat(userget1.getName(), is(user1.getName()));
-		assertThat(userget1.getPassword(), is(user1.getPassword()));
+		checkSameUser(userget1, user1);
 
 		User userget2 = dao.get(user2.getId());
-		assertThat(userget2.getName(), is(user2.getName()));
-		assertThat(userget2.getPassword(), is(user2.getPassword()));
+		checkSameUser(userget2, user2);
 	}
 
 	@Test
@@ -93,7 +92,7 @@ public class UserDaoTest {
 
 		List<User> users0 = dao.getAll();
 		assertThat(users0.size(), is(0));
-		
+
 		dao.add(user1); // ID : gyumee
 		List<User> users1 = dao.getAll();
 		assertThat(users1.size(), is(1));
@@ -117,30 +116,33 @@ public class UserDaoTest {
 		assertThat(user1.getId(), is(user2.getId()));
 		assertThat(user1.getName(), is(user2.getName()));
 		assertThat(user1.getPassword(), is(user2.getPassword()));
+		assertThat(user1.getLevel(), is(user2.getLevel()));
+		assertThat(user1.getLogin(), is(user2.getLogin()));
+		assertThat(user1.getRecommend(), is(user2.getRecommend()));
 	}
-	
-	// DataAccessException은 추상화되어 있으며 
+
+	// DataAccessException은 추상화되어 있으며
 	// 아래 테스트의 정확한 에러명은 DuplicateKeyException 이
-	// 따라서 @Test(expected = DuplicatKeyException)으로 더 명확한 테스트를 수행할 수 있다. 
+	// 따라서 @Test(expected = DuplicatKeyException)으로 더 명확한 테스트를 수행할 수 있다.
 	@Test(expected = DataAccessException.class)
 	public void duplicateKey() {
 		dao.deleteAll();
-		
+
 		dao.add(user1);
 		dao.add(user1);
 	}
-	
+
 	@Test
 	public void sqlExceptionTranslate() {
 		dao.deleteAll();
-		
+
 		try {
 			dao.add(user1);
 			dao.add(user1);
-		} catch(DuplicateKeyException ex) {
-			SQLException sqlEx = (SQLException)ex.getRootCause();
+		} catch (DuplicateKeyException ex) {
+			SQLException sqlEx = (SQLException) ex.getRootCause();
 			SQLExceptionTranslator set = new SQLErrorCodeSQLExceptionTranslator(dataSource);
-			
+
 			assertThat(set.translate(null, null, sqlEx), is(DuplicateKeyException.class));
 		}
 	}
