@@ -34,3 +34,8 @@ flush privileges;
 alter table users add column level tinyint not null;
 alter table users add column login int not null;
 alter table users add column recommend int not null;
+
+-- set default value each columns
+alter table users alter column level set default 1;
+alter table users alter column login set default 0;
+alter table users alter column recommend set default 0;
