@@ -2,6 +2,7 @@ package springbook.user.service;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
@@ -93,4 +94,43 @@ public class UserServiceTest {
 		assertThat(userWithLevelRead.getLevel(), is(userWithLevel.getLevel()));
 		assertThat(userWithoutLevelRead.getLevel(), is(Level.BASIC));
 	}
+	
+	@Test
+	public void upgradeAllOrNothing() {
+		UserService testUserService = new TestUserService(users.get(3).getId());
+		testUserService.setUserDao(this.userDao);
+		userDao.deleteAll();
+		for (User user : users) {
+			userDao.add(user);
+		}
+		
+		try {
+			testUserService.upgradeLevels();
+			fail("TestUserServiceException expected");
+		} catch (TestUserServiceException e) {
+			
+		}
+		
+		checkLevelUpgraded(users.get(1), false);
+	}
+}
+
+class TestUserService extends UserService {
+	
+	private String id;
+	
+	TestUserService(String id) {
+		this.id = id;
+	}
+	
+	protected void upgradeLevel(User user) {
+		if (user.getId().equals(this.id)) {
+			throw new TestUserServiceException();
+		}
+		super.upgradeLevel(user);
+	}
+}
+
+class TestUserServiceException extends RuntimeException {
+	
 }
