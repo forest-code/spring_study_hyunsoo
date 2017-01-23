@@ -100,6 +100,7 @@ public class UserServiceTest {
 		UserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(this.userDao);
 		userDao.deleteAll();
+		
 		for (User user : users) {
 			userDao.add(user);
 		}
