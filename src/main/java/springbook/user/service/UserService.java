@@ -21,16 +21,15 @@ public class UserService {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
+
+	private PlatformTransactionManager transactionManager;
 	
-	private DataSource dataSource;
-	
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+	public void setTransactionManager(PlatformTransactionManager transactionManager) {
+		this.transactionManager = transactionManager;
 	}
 
 	public void upgradeLevels() throws SQLException {
-		PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-		TransactionStatus status = transactionManager.getTransaction(new DefaultTransactionDefinition());
+		TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
 		try {
 			List<User> users = userDao.getAll();
@@ -41,9 +40,9 @@ public class UserService {
 				}
 			}
 
-			transactionManager.commit(status);
+			this.transactionManager.commit(status);
 		} catch (Exception e) {
-			transactionManager.rollback(status);
+			this.transactionManager.rollback(status);
 			throw e;
 		}
 	}
