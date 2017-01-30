@@ -6,7 +6,7 @@
 						
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/testdb?characterEncoding=UTF-8" />
+		<property name="url" value="jdbc:mysql://localhost/testdb?characterEncoding=UTF-8&amp;autoReconnect=true&amp;useSSL=false" />
 		<property name="username" value="spring" />
 		<property name="password" value="book" />
 	</bean>
