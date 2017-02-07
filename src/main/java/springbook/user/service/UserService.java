@@ -89,6 +89,7 @@ public class UserService {
 		userDao.add(user);
 	}
 	
+	@Deprecated
 	private void sendUpgradeEMail(User user) {
 		Properties props = new Properties();
 		props.put("mail.smtp.host", "mail.ksug.org");
