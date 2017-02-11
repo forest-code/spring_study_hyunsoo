@@ -32,7 +32,7 @@ import springbook.user.domain.User;
 public class UserServiceTest {
 	
 	@Autowired
-	UserService userService;
+	UserServiceImpl userServiceImpl;
 	
 	@Autowired
 	UserDao userDao;
@@ -91,9 +91,9 @@ public class UserServiceTest {
 		}
 		
 		MockMailSender mockMailSender = new MockMailSender();
-		userService.setMailSender(mockMailSender);
+		userServiceImpl.setMailSender(mockMailSender);
 		
-		userService.upgradeLevels();
+		userServiceImpl.upgradeLevels();
 		
 		checkLevelUpgraded(users.get(0), false);
 		checkLevelUpgraded(users.get(1), true);
@@ -130,8 +130,8 @@ public class UserServiceTest {
 		User userWithoutLevel = users.get(0);
 		userWithoutLevel.setLevel(null);
 		
-		userService.add(userWithLevel);
-		userService.add(userWithoutLevel);
+		userServiceImpl.add(userWithLevel);
+		userServiceImpl.add(userWithoutLevel);
 		
 		User userWithLevelRead = userDao.get(userWithLevel.getId());
 		User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -142,10 +142,14 @@ public class UserServiceTest {
 	
 	@Test
 	public void upgradeAllOrNothing() throws SQLException {
-		UserService testUserService = new TestUserService(users.get(3).getId());
+		TestUserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(this.userDao);
-		testUserService.setTransactionManager(transactionManager);
 		testUserService.setMailSender(mailSender);
+		
+		UserServiceTx txUserService = new UserServiceTx();
+		txUserService.setTransactionManager(transactionManager);
+		txUserService.setUserService(testUserService);
+		
 		userDao.deleteAll();
 		
 		for (User user : users) {
@@ -153,7 +157,7 @@ public class UserServiceTest {
 		}
 		
 		try {
-			testUserService.upgradeLevels();
+			txUserService.upgradeLevels();
 			fail("TestUserServiceException expected");
 		} catch (TestUserServiceException e) {
 			
@@ -163,7 +167,7 @@ public class UserServiceTest {
 	}
 }
 
-class TestUserService extends UserService {
+class TestUserService extends UserServiceImpl {
 	
 	private String id;
 	
