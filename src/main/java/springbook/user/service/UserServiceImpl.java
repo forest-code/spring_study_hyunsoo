@@ -31,37 +31,7 @@ public class UserServiceImpl implements UserService {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
-	/*
-	private PlatformTransactionManager transactionManager;
-	
-	public void setTransactionManager(PlatformTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
-
-	public void upgradeLevels() throws SQLException {
-		TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
 		
-		try {
-			this.upgradeLevelsInternal();
-			this.transactionManager.commit(status);
-		} catch (Exception e) {
-			this.transactionManager.rollback(status);
-			throw e;
-		}
-	}
-	
-	private void upgradeLevelsInternal() {
-		List<User> users = userDao.getAll();
-
-		for (User user : users) {
-			if (canUpgradeLevel(user)) {
-				upgradeLevel(user);
-			}
-		}
-	}
-	*/
-	
 	public void upgradeLevels() {
 		List<User> users = userDao.getAll();
 		
