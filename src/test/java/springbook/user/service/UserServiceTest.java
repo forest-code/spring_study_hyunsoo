@@ -1,6 +1,5 @@
 package springbook.user.service;
 
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -21,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -29,7 +29,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import net.sf.cglib.proxy.InvocationHandler;
 import net.sf.cglib.proxy.Proxy;
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -40,6 +39,9 @@ import springbook.user.hadler.TransactionHandler;
 @ContextConfiguration(locations = "/test-applicationContext.xml")
 public class UserServiceTest {
 
+	@Autowired
+	ApplicationContext context;
+	
 	@Autowired
 	UserServiceImpl userServiceImpl;
 
@@ -179,19 +181,26 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void upgradeAllOrNothing() throws SQLException {
+	@DirtiesContext
+	public void upgradeAllOrNothing() throws Exception {
 		TestUserService testUserService = new TestUserService(users.get(3).getId());
 		testUserService.setUserDao(this.userDao);
 		testUserService.setMailSender(mailSender);
-
-		TransactionHandler txHandler = new TransactionHandler();
-		txHandler.setTarget(testUserService);
-		txHandler.setTransactionManager(transactionManager);
-		txHandler.setPattern("upgradeLevels");
-		UserService txUserService = (UserService)Proxy.newProxyInstance(
-				getClass().getClassLoader(), 
-				new Class[] {UserService.class}, 
-				txHandler);
+		
+//		TransactionHandler txHandler = new TransactionHandler();
+//		txHandler.setTarget(testUserService);
+//		txHandler.setTransactionManager(transactionManager);
+//		txHandler.setPattern("upgradeLevels");
+//		
+//		UserService txUserService = (UserService)Proxy.newProxyInstance(
+//				getClass().getClassLoader(), 
+//				new Class[] {UserService.class}, 
+//				txHandler);
+		
+		TxProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
+		txProxyFactoryBean.setTarget(testUserService);
+		
+		UserService txUserService = (UserService)txProxyFactoryBean.getObject();
 
 		userDao.deleteAll();
 

@@ -9,7 +9,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import net.sf.cglib.proxy.InvocationHandler;
 
-public class TransactionHandler implements InvocationHandler {
+
+public class TransactionHandler implements InvocationHandler, java.lang.reflect.InvocationHandler{
 	
 	private Object target;
 	
