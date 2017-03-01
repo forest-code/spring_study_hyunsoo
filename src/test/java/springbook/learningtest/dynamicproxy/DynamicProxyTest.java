@@ -8,6 +8,8 @@ import java.lang.reflect.Proxy;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Test;
+import org.springframework.aop.ClassFilter;
+import org.springframework.aop.Pointcut;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.aop.support.NameMatchMethodPointcut;
@@ -69,4 +71,41 @@ public class DynamicProxyTest {
 		assertThat(proxiedHello.sayThankYou("hyunto"), is("Thank You hyunto"));	// 포인트컷에 의해 UpperCase 부가기능이 적용되지 않는다.
 	}
 
+	/* Class Filter와 Method Matcher를 모두 사용하는 PointCut을 확인하기 위한 테스 */
+	@Test
+	public void classNamePointcutAdvisor() {
+		// 포인트컷 준비
+		NameMatchMethodPointcut classMethodPointcut = new NameMatchMethodPointcut() {
+			public ClassFilter getClassFilter() {
+				return new ClassFilter() {
+					public boolean matches(Class<?> clazz) {
+						return clazz.getSimpleName().startsWith("HelloT");
+					}
+				};
+			}
+		};
+		classMethodPointcut.setMappedName("sayH*");
+		
+		// 테스트
+		checkAdviced(new HelloTarget(), classMethodPointcut, true);
+		checkAdviced(new HelloWorld(), classMethodPointcut, false);
+		checkAdviced(new HelloToby(), classMethodPointcut, true);
+	}
+	
+	private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
+		ProxyFactoryBean pfBean = new ProxyFactoryBean();
+		pfBean.setTarget(target);
+		pfBean.addAdvisor(new DefaultPointcutAdvisor(pointcut, new UppercaseAdvice()));
+		Hello proxiedHello = (Hello) pfBean.getObject();
+		
+		if (adviced) {
+			assertThat(proxiedHello.sayHello("Hyunsoo"), is("HELLO HYUNSOO"));
+			assertThat(proxiedHello.sayHi("Hyunsoo"), is("HI HYUNSOO"));
+			assertThat(proxiedHello.sayThankYou("Hyunsoo"), is("Thank You Hyunsoo"));
+		} else {
+			assertThat(proxiedHello.sayHello("Hyunsoo"), is("Hello Hyunsoo"));
+			assertThat(proxiedHello.sayHi("Hyunsoo"), is("Hi Hyunsoo"));
+			assertThat(proxiedHello.sayThankYou("Hyunsoo"), is("Thank You Hyunsoo"));
+		}
+	}
 }
