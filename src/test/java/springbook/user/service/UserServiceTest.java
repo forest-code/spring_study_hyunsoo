@@ -55,6 +55,9 @@ public class UserServiceTest {
 
 	@Autowired
 	MailSender mailSender;
+	
+	@Autowired
+	UserService testUserService;
 
 	List<User> users;
 
@@ -106,8 +109,6 @@ public class UserServiceTest {
 		userServiceImpl.upgradeLevels();
 
 		// then
-//		verify(mockUserDao, times(2)).update(any(User.class));
-//		verify(mockUserDao, times(2)).update(any(User.class));
 		verify(mockUserDao).update(users.get(1));
 		assertThat(users.get(1).getLevel(), is(Level.SILVER));
 		verify(mockUserDao).update(users.get(3));
@@ -146,21 +147,6 @@ public class UserServiceTest {
 		assertThat(request.get(1), is(users.get(3).getEmail()));
 	}
 
-	private void checkLevelUpgraded(User user, boolean upgraded) {
-		User userUpdate = userDao.get(user.getId());
-
-		if (upgraded) {
-			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
-		} else {
-			assertThat(userUpdate.getLevel(), is(user.getLevel()));
-		}
-	}
-
-	private void checkLevel(User user, Level expectedLevel) {
-		User userUpdate = userDao.get(user.getId());
-		assertThat(userUpdate.getLevel(), is(expectedLevel));
-	}
-
 	@Test
 	public void add() {
 		userDao.deleteAll();
@@ -180,18 +166,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	@DirtiesContext
 	public void upgradeAllOrNothing() throws Exception {
-		TestUserService testUserService = new TestUserService(users.get(3).getId());
-		testUserService.setUserDao(this.userDao);
-		testUserService.setMailSender(mailSender);
-		
-//		TxProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", TxProxyFactoryBean.class);
-		ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-		txProxyFactoryBean.setTarget(testUserService);
-		
-		UserService txUserService = (UserService)txProxyFactoryBean.getObject();
-
 		userDao.deleteAll();
 
 		for (User user : users) {
@@ -199,7 +174,7 @@ public class UserServiceTest {
 		}
 
 		try {
-			txUserService.upgradeLevels();
+			this.testUserService.upgradeLevels();
 			fail("TestUserServiceException expected");
 		} catch (TestUserServiceException e) {
 
@@ -207,21 +182,32 @@ public class UserServiceTest {
 
 		checkLevelUpgraded(users.get(1), false);
 	}
-}
+	
+	private void checkLevelUpgraded(User user, boolean upgraded) {
+		User userUpdate = userDao.get(user.getId());
 
-class TestUserService extends UserServiceImpl {
-
-	private String id;
-
-	TestUserService(String id) {
-		this.id = id;
+		if (upgraded) {
+			assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
+		} else {
+			assertThat(userUpdate.getLevel(), is(user.getLevel()));
+		}
 	}
 
-	protected void upgradeLevel(User user) {
-		if (user.getId().equals(this.id)) {
-			throw new TestUserServiceException();
+	private void checkLevel(User user, Level expectedLevel) {
+		User userUpdate = userDao.get(user.getId());
+		assertThat(userUpdate.getLevel(), is(expectedLevel));
+	}
+	
+	static class TestUserServiceImpl extends UserServiceImpl {
+
+		private String id = "madnite1";
+
+		protected void upgradeLevel(User user) {
+			if (user.getId().equals(this.id)) {
+				throw new TestUserServiceException();
+			}
+			super.upgradeLevel(user);
 		}
-		super.upgradeLevel(user);
 	}
 }
 
