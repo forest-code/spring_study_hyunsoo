@@ -19,8 +19,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="mailSender" class="springbook.user.service.DummyMailSender">
-	</bean>
+	<bean id="mailSender" class="springbook.user.service.DummyMailSender" />
 	
 	<bean id="userService" class="springbook.user.service.UserServiceImpl">
 		<property name="userDao" ref="userDao"/>
@@ -31,14 +30,14 @@
 		<property name="transactionManager" ref="transactionManager" />
 	</bean>
 	
-	<bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
+	<bean id="transactionPointcut" class="springbook.learningtest.proxy.NameMatchClassMethodPointcut">
+		<property name="mappedClassName" value="*ServiceImpl" />
 		<property name="mappedName" value="upgrade*" />
 	</bean>
 	
-	
-	<bean id="transactionAdvisor" class="springbook.service.NameMatchClassMethodPointcut">
-		<property name="mappedClassName" value="*ServiceImpl" />
-		<property name="mappedName" value="upgrade*" />
+	<bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="transactionAdvice" />
+		<property name="pointcut" ref="transactionPointcut" />
 	</bean>
 	
 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />

@@ -87,9 +87,11 @@ public class DynamicProxyTest {
 		classMethodPointcut.setMappedName("sayH*");
 		
 		// 테스트
-		checkAdviced(new HelloTarget(), classMethodPointcut, true);
-		checkAdviced(new HelloWorld(), classMethodPointcut, false);
-		checkAdviced(new HelloToby(), classMethodPointcut, true);
+		checkAdviced(new HelloTarget(), classMethodPointcut, true);	// 포인트컷에 적용되는 테스트
+		class HelloWorld extends HelloTarget {};
+		checkAdviced(new HelloWorld(), classMethodPointcut, false);	// 포인트컷에 적용되지 않는 테스트
+		class HelloToby extends HelloTarget {};
+		checkAdviced(new HelloToby(), classMethodPointcut, true);	// 포인트컷에 적용되는 테스트
 	}
 	
 	private void checkAdviced(Object target, Pointcut pointcut, boolean adviced) {
