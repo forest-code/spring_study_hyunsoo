@@ -45,30 +45,26 @@ public class JdbcContext {
 	/* 클라이언트 */
 	public void executeSql(final String query) throws SQLException {
 		/* 콜백 */
-		workWithStatementStrategy(
-			new StatementStrategy() {
-				@Override
-				public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-					return c.prepareStatement(query);
-				}
+		workWithStatementStrategy(new StatementStrategy() {
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				return c.prepareStatement(query);
 			}
-		);
+		});
 	}
 
 	/* 클라이언트 - 도전과제 */
-	public void executeSql(final String query, final String...args) throws SQLException {
+	public void executeSql(final String query, final String... args) throws SQLException {
 		/* 콜백 */
-		workWithStatementStrategy(
-			new StatementStrategy() {
-				@Override
-				public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
-					PreparedStatement ps = c.prepareStatement(query);
-					for (int i = 1; i <= args.length; i++) {
-						ps.setString(i, args[i-1]);
-					}
-					return ps;
+		workWithStatementStrategy(new StatementStrategy() {
+			@Override
+			public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+				PreparedStatement ps = c.prepareStatement(query);
+				for (int i = 1; i <= args.length; i++) {
+					ps.setString(i, args[i - 1]);
 				}
+				return ps;
 			}
-		);
+		});
 	}
 }
