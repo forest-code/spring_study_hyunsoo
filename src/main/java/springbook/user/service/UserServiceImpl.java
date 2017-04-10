@@ -1,6 +1,5 @@
 package springbook.user.service;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -14,9 +13,6 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -108,5 +104,25 @@ public class UserServiceImpl implements UserService {
 		mailMessage.setText("사용자님의 등급이 " + user.getLevel().name());
 		
 		this.mailSender.send(mailMessage);
+	}
+
+	@Override
+	public User get(String id) {
+		return userDao.get(id);
+	}
+
+	@Override
+	public List<User> getAll() {
+		return userDao.getAll();
+	}
+
+	@Override
+	public void deleteAll() {
+		userDao.deleteAll();
+	}
+
+	@Override
+	public void update(User user) {
+		userDao.update(user);
 	}
 }
