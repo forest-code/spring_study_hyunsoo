@@ -34,15 +34,20 @@
 	
 	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserService" parent="userService" />	
 	
+	<!-- org.springframework.aop.aspectj.AspectJExpressionPointcut -->
 	<aop:config>
 		<aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
 	</aop:config>
 	
+	<!-- org.springframework.transaction.interceptor.TransactionInterceptor -->
 	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
 			<tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30"/>
 			<tx:method name="*" propagation="REQUIRED"/>	
 		</tx:attributes>
 	</tx:advice>
+	
+	<!-- @Transactional Annotation -->
+	<tx:annotation-driven/>
 	
 </beans>
