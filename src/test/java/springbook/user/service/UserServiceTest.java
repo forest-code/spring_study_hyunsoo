@@ -29,6 +29,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
@@ -222,6 +224,26 @@ public class UserServiceTest {
 			}
 			return null;
 		}
+	}
+	
+	@Test
+	public void transactionSync() {
+		userDao.deleteAll();
+		assertThat(userDao.getCount(), is(0));
+		
+		DefaultTransactionDefinition txDefinition = new DefaultTransactionDefinition();
+//		txDefinition.setReadOnly(true);
+		TransactionStatus txStatus = transactionManager.getTransaction(txDefinition);
+//		userService.deleteAll();
+		
+		userService.add(users.get(0));
+		userService.add(users.get(1));
+		assertThat(userDao.getCount(), is(2));
+		
+//		transactionManager.commit(txStatus);
+		transactionManager.rollback(txStatus);
+		
+		assertThat(userDao.getCount(), is(0));
 	}
 }
 
