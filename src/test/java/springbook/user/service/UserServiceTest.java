@@ -26,10 +26,12 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import springbook.user.dao.UserDao;
@@ -243,6 +245,25 @@ public class UserServiceTest {
 		} finally {
 			transactionManager.rollback(txStatus);
 		}
+	}
+	
+	@Test
+	@Transactional
+	public void txAnnotationTest() {
+		userService.deleteAll();
+	}
+	
+	@Test(expected = TransientDataAccessResourceException.class)
+	@Transactional(readOnly=true)
+	public void txReadOnlyTest() {
+		userService.deleteAll();
+	}
+	
+	@Test
+	@Transactional
+//	@Rollback(false)
+	public void rollbackAnnotationTest() {
+		userService.deleteAll();
 	}
 }
 
