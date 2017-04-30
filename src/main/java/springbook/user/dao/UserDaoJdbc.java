@@ -3,6 +3,7 @@ package springbook.user.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -11,17 +12,24 @@ import org.springframework.jdbc.core.RowMapper;
 
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
+import springbook.user.sqlservice.SqlService;
 
 public class UserDaoJdbc implements UserDao {
 
 	private JdbcTemplate jdbcTemplate;
 
+	private Map<String, String> sqlMap;
+	
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
+	public void setSqlMap(Map<String, String> sqlMap) {
+		this.sqlMap = sqlMap;
+	}
+	
 	public void add(final User user) {
-		this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) values (?,?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(),
+		this.jdbcTemplate.update(this.sqlMap.get("add"), user.getId(), user.getName(), user.getPassword(),
 				user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
 	}
 
