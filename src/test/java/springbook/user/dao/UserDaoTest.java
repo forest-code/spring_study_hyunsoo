@@ -136,7 +136,7 @@ public class UserDaoTest {
 	@Test
 	public void sqlExceptionTranslate() {
 		dao.deleteAll();
-
+		
 		try {
 			dao.add(user1);
 			dao.add(user1);
