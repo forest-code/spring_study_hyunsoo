@@ -11,12 +11,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
 
 public class JaxbTest {
-
+	
 	@Test
 	public void readSqlmap() throws JAXBException, IOException {
 		String contextPath = Sqlmap.class.getPackage().getName();
