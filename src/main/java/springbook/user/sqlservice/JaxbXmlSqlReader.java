@@ -11,8 +11,10 @@ import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
 
 public class JaxbXmlSqlReader implements SqlReader {
+	
+	private static final String DEFAULT_SQL_MAP_FILE = "sqlmap.xml";
 
-	private String sqlmapFile;
+	private String sqlmapFile = DEFAULT_SQL_MAP_FILE;
 
 	public void setSqlmapFile(String sqlmapFile) {
 		this.sqlmapFile = sqlmapFile;
