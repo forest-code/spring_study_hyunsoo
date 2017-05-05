@@ -15,26 +15,14 @@ import springbook.user.domain.User;
 public class UserDaoJdbc implements UserDao {
 
 	private JdbcTemplate jdbcTemplate;
-	
-	private String sqlAdd;
 
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-	
-	public void setSqlAdd(String sqlAdd) {
-		this.sqlAdd = sqlAdd;
-	}
 
 	public void add(final User user) {
-		this.jdbcTemplate.update(this.sqlAdd, 
-				user.getId(), 
-				user.getName(), 
-				user.getPassword(),
-				user.getLevel().intValue(), 
-				user.getLogin(), 
-				user.getRecommend(), 
-				user.getEmail());
+		this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) values (?,?,?,?,?,?,?)", user.getId(), user.getName(), user.getPassword(),
+				user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
 	}
 
 	public void deleteAll() {
