@@ -37,9 +37,21 @@
 	
 	<bean id="sqlRegistry" class="springbook.user.sqlservice.HashMapSqlRegistry">
 	</bean>
-	 -->
-	 
+	
+	/* 7.3.1 */
 	<bean id="sqlService" class="springbook.user.sqlservice.DefaultSqlService" />
+	 -->
+	
+	<!-- start 7.3.2 -->
+	<bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
+		<property name="unmarshaller" ref="unmarshaller" />
+	</bean>
+	
+	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
+	</bean>
+	<!-- end 7.3.2 -->	
+	
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
