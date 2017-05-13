@@ -25,35 +25,17 @@
 		<property name="sqlService" ref="sqlService" />
 	</bean>
 	
-	<!-- 
-	<bean id="sqlService" class="springbook.user.sqlservice.BaseSqlService">
-		<property name="sqlReader" ref="sqlReader" />
-		<property name="sqlRegistry" ref="sqlRegistry" />
-	</bean>
-	
-	<bean id="sqlReader" class="springbook.user.sqlservice.JaxbXmlSqlReader">
-		<property name="sqlmapFile" value="sqlmap.xml" />
-	</bean>
-	
-	<bean id="sqlRegistry" class="springbook.user.sqlservice.HashMapSqlRegistry">
-	</bean>
-	
-	/* 7.3.1 */
-	<bean id="sqlService" class="springbook.user.sqlservice.DefaultSqlService" />
-	 -->
-	
-	<!-- start 7.3.2 -->
 	<bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
 		<property name="unmarshaller" ref="unmarshaller" />
 		<property name="sqlmap" value="classpath:springbook/user/dao/sqlmap.xml" />
-		<!-- <property name="sqlmap" value="file:/opt/resources/sqlmap.xml" /> -->
-		<!-- <property name="sqlmap" value="http://www.epril.com/resources/sqlmap.xml" /> -->
+		<property name="sqlRegistry" ref="sqlRegistry" />
 	</bean>
+	
+	<bean id="sqlRegistry" class="springbook.user.sqlservice.register.ConcurrentHashMapSqlRegistry"></bean>
 	
 	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
 	</bean>
-	<!-- end 7.3.2 -->	
 	
 	
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
