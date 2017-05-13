@@ -1,4 +1,4 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.reader;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -10,8 +10,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import springbook.user.dao.UserDao;
+import springbook.user.sqlservice.SqlService;
+import springbook.user.sqlservice.exception.SqlNotFoundException;
+import springbook.user.sqlservice.exception.SqlRetrevalFailureException;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
+import springbook.user.sqlservice.register.SqlRegistry;
 
 public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
 

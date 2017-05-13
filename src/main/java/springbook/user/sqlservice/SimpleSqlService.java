@@ -2,6 +2,8 @@ package springbook.user.sqlservice;
 
 import java.util.Map;
 
+import springbook.user.sqlservice.exception.SqlRetrevalFailureException;
+
 public class SimpleSqlService implements SqlService {
 	
 	private Map<String, String> sqlMap;

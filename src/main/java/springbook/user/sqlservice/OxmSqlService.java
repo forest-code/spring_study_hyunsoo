@@ -11,8 +11,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.oxm.Unmarshaller;
 
 import springbook.user.dao.UserDao;
+import springbook.user.sqlservice.exception.SqlRetrevalFailureException;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
+import springbook.user.sqlservice.reader.SqlReader;
+import springbook.user.sqlservice.register.HashMapSqlRegistry;
+import springbook.user.sqlservice.register.SqlRegistry;
 
 public class OxmSqlService implements SqlService {
 	

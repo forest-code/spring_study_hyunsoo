@@ -1,4 +1,4 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.reader;
 
 import java.io.InputStream;
 
@@ -9,6 +9,7 @@ import javax.xml.bind.Unmarshaller;
 import springbook.user.dao.UserDao;
 import springbook.user.sqlservice.jaxb.SqlType;
 import springbook.user.sqlservice.jaxb.Sqlmap;
+import springbook.user.sqlservice.register.SqlRegistry;
 
 public class JaxbXmlSqlReader implements SqlReader {
 	

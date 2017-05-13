@@ -1,7 +1,9 @@
-package springbook.user.sqlservice;
+package springbook.user.sqlservice.register;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import springbook.user.sqlservice.exception.SqlNotFoundException;
 
 public class HashMapSqlRegistry implements SqlRegistry {
 	
