@@ -61,14 +61,11 @@ public class TestApplicationContext {
 	 * 애플리케이션 로직 & 테스트 
 	 */
 	
-	@Autowired
-	SqlService sqlService;
-	
 	@Bean
 	public UserDao userDao() {
 		UserDaoJdbc dao = new UserDaoJdbc();
 		dao.setDataSource(dataSource());
-		dao.setSqlService(this.sqlService);
+		dao.setSqlService(sqlService());
 		return dao;
 	}
 	
@@ -120,7 +117,7 @@ public class TestApplicationContext {
 		return marshaller;
 	}
 	
-	@Bean
+	@Bean(destroyMethod = "shutdown")
 	public DataSource embeddedDatabase() {
 		return new EmbeddedDatabaseBuilder()
 				.setName("embeddedDatabase")
