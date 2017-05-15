@@ -3,10 +3,10 @@ package springbook.user.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -18,16 +18,14 @@ public class UserDaoJdbc implements UserDao {
 
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
 	private SqlService sqlService;
 	
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 
-	public void setSqlService(SqlService sqlService) {
-		this.sqlService = sqlService;
-	}
-	
 	public void add(final User user) {
 		this.jdbcTemplate.update(this.sqlService.getSql("userAdd"), user.getId(), user.getName(), user.getPassword(),
 				user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
