@@ -16,49 +16,6 @@
 						http://www.springframework.org/schema/jdbc
 						http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
 						
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost/testdb?characterEncoding=UTF-8&amp;autoReconnect=true&amp;useSSL=false" />
-		<property name="username" value="spring" />
-		<property name="password" value="book" />
-	</bean>
-	
- 	<jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-		<jdbc:script location="classpath:springbook/user/sqlservice/sql/sqlRegistrySchema.sql"/>
-	</jdbc:embedded-database>
-	
-	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
-		<property name="dataSource" ref="dataSource" />
-		<property name="sqlService" ref="sqlService" />
-	</bean>
-	
-	<bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
-		<property name="unmarshaller" ref="unmarshaller" />
-		<property name="sqlmap" value="classpath:springbook/user/dao/sqlmap.xml" />
-		<property name="sqlRegistry" ref="sqlRegistry" />
-	</bean>
-	
-	<bean id="sqlRegistry" class="springbook.user.sqlservice.register.EmbeddedDbSqlRegistry">
-		<property name="dataSource" ref="embeddedDatabase" />
-	</bean>
-	
-	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
-	</bean>
-	
-	
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="mailSender" class="springbook.user.service.DummyMailSender" />
-	
-	<bean id="userService" class="springbook.user.service.UserServiceImpl">
-		<property name="userDao" ref="userDao"/>
-		<property name="mailSender" ref="mailSender" />
-	</bean>
-	
-	<bean id="testUserService" class="springbook.user.service.UserServiceTest$TestUserService" parent="userService" />	
 	
 	<!-- org.springframework.aop.aspectj.AspectJExpressionPointcut -->
 	<aop:config>
@@ -75,8 +32,5 @@
 	
 	<!-- @Transactional Annotation -->
 	<tx:annotation-driven/>
-	
-	<!-- SQL Map -->
-	<context:annotation-config/>
 	
 </beans>
