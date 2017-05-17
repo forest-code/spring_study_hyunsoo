@@ -24,12 +24,14 @@ import com.mysql.jdbc.Driver;
 import springbook.user.dao.UserDao;
 import springbook.user.service.DummyMailSender;
 import springbook.user.service.UserServiceTest.TestUserService;
+import springbook.user.sqlservice.config.EnableSqlService;
 import springbook.user.sqlservice.config.SqlMapConfig;
 
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "springbook.user")
-@Import(SqlServiceContext.class)
+//@Import(SqlServiceContext.class)
+@EnableSqlService
 @PropertySource("/database.properties")
 public class AppContext implements SqlMapConfig {
 	
