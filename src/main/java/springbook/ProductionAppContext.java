@@ -4,22 +4,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailSender;
-
-import springbook.user.service.DummyMailSender;
-import springbook.user.service.UserServiceTest.TestUserService;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@Profile("test")
-public class TestAppContext {
-
-	@Bean
-	public TestUserService testUserService() {
-		return new TestUserService();
-	}
+@Profile("production")
+public class ProductionAppContext {
 
 	@Bean
 	public MailSender mailSender() {
-		return new DummyMailSender();
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost("mail.mycompany.com");
+		return mailSender;
 	}
-
+	
 }

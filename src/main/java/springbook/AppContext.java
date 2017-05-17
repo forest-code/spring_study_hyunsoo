@@ -16,7 +16,7 @@ import com.mysql.jdbc.Driver;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "springbook.user")
-@Import(SqlServiceContext.class)
+@Import({SqlServiceContext.class, TestAppContext.class, ProductionAppContext.class})
 public class AppContext {
 	
 	/**
