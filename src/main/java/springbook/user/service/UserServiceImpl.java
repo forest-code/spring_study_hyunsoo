@@ -11,17 +11,22 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 import springbook.user.dao.UserDao;
 import springbook.user.domain.Level;
 import springbook.user.domain.User;
 
+@Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
+	@Autowired
 	UserDao userDao;
 	
+	@Autowired
 	private MailSender mailSender;
 	
 	public void setUserDao(UserDao userDao) {
