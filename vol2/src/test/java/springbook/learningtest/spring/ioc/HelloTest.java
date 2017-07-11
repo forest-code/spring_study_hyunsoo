@@ -70,17 +70,4 @@ public class HelloTest {
 		assertThat(ac.getBean("printer").toString(), is("Hello Spring"));
 	}
 	
-	@Test
-	public void genericApplicationContext2() {
-		GenericApplicationContext ac = new GenericApplicationContext();
-		PropertiesBeanDefinitionReader reader = new PropertiesBeanDefinitionReader(ac);
-		reader.loadBeanDefinitions("HelloGenericApplicationContext.properties");.
-		ac.refresh();
-		
-		Hello hello = ac.getBean("hello", Hello.class);
-		hello.print();
-		
-		assertThat(ac.getBean("printer").toString(), is("Hello Spring"));
-	}
-
 }
