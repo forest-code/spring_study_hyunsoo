@@ -1,0 +1,3 @@
+dependencies { 
+	compile 'org.springframework:spring-context:3.2.18.RELEASE'
+}
