@@ -3,18 +3,23 @@ package springbook.learningtest.spring.ioc;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.PropertiesBeanDefinitionReader;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 import springbook.learningtest.spring.ioc.bean.Hello;
+import springbook.learningtest.spring.ioc.bean.printer.Printer;
 import springbook.learningtest.spring.ioc.bean.printer.StringPrinter;
 
 public class HelloTest {
@@ -68,6 +73,24 @@ public class HelloTest {
 		hello.print();
 		
 		assertThat(ac.getBean("printer").toString(), is("Hello Spring"));
+	}
+	
+	@Test
+	public void hierarchicalApplicationContext() {
+		ApplicationContext parent = new GenericXmlApplicationContext("parentContext.xml");
+		GenericApplicationContext child = new GenericApplicationContext(parent);
+		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(child);
+		reader.loadBeanDefinitions("childContext.xml");
+		child.refresh();
+		
+		Printer printer = child.getBean("printer", Printer.class);
+		assertNotNull(printer);
+		
+		Hello hello = child.getBean("hello", Hello.class);
+		assertNotNull(hello);
+		
+		hello.print();
+		assertThat(printer.toString(), is("Hello Child"));
 	}
 	
 }
