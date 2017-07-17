@@ -2,16 +2,29 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
 						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 						http://www.springframework.org/schema/aop
 						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 						
+	<context:property-placeholder location="classpath:database.properties"/>
+	<!-- 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
 		<property name="driverClass" value="${db.driverclass}" />
 		<property name="url" value="${db.url}" />
 		<property name="username" value="${db.username}" />
 		<property name="password" value="${db.password}" />
+	</bean>
+	 -->
+	
+	<util:properties id="dbprops" location="classpath:database.properties" />
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="driverClass" value="#{dbprops['db.driverclass']}" />
+		<property name="url" value="#{dbprops['db.url']}" />
+		<property name="username" value="#{dbprops['db.username']}" />
+		<property name="password" value="#{dbprops['db.password']}" />
 	</bean>
 
 	<bean id="userDao" class="springbook.user.dao.UserDaoJdbc">
