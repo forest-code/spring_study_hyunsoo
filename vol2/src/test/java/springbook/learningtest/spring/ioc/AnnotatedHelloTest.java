@@ -20,7 +20,8 @@ public class AnnotatedHelloTest {
     @Test
     public void simpleBeanScanning() {
         ApplicationContext ctx = new AnnotationConfigApplicationContext("springbook.learningtest.spring.ioc.bean");
-        AnnotatedHello hello = ctx.getBean("annotatedHello", AnnotatedHello.class);
+//        AnnotatedHello hello = ctx.getBean("annotatedHello", AnnotatedHello.class);
+        AnnotatedHello hello = ctx.getBean(AnnotatedHello.class);
 
         assertNotNull(hello);
     }
