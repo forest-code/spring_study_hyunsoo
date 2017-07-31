@@ -25,5 +25,5 @@ nbdist/
 .nb-gradle/
 
 ### bower ###
-src/main/resources/static/**
-!src/main/resources/static/custom/
+src/main/resources/static/*
+!src/main/resources/static/custom/*
