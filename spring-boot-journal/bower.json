@@ -1,0 +1,20 @@
+{
+  "name": "spring-boot-journal",
+  "homepage": "https://github.com/forest-code/toby_spring_study_hyunsoo",
+  "description": "Spring Boot Demo Project",
+  "main": "",
+  "authors": [
+    "hyunto"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+	"dependencies": {
+		"bootstrap": "3.x"
+	}
+}
