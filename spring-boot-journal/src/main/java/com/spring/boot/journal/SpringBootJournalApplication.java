@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.Banner;
@@ -15,6 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,9 @@ import org.springframework.stereotype.Component;
 
 import com.spring.boot.journal.domain.Journal;
 import com.spring.boot.journal.repository.JournalRepository;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @SpringBootApplication(exclude={ActiveMQAutoConfiguration.class})
 public class SpringBootJournalApplication implements CommandLineRunner, ApplicationRunner{
@@ -117,6 +122,45 @@ public class SpringBootJournalApplication implements CommandLineRunner, Applicat
 			for (String arg : args) {
 				log.info(arg);
 			}
+		};
+	}
+	
+	@Value("${server.ip}")
+	private String serverIp;
+	
+	@Bean
+	CommandLineRunner values() {
+		return args -> {
+			log.info(" > 서버 IP: " + serverIp);
+		};
+	}
+	
+	/**
+	 * ------------------------------------------------------------------------
+	 * Pro Spring Boot Book 3.4
+	 */
+	@Value("${myapp.server.ip}")
+	private String myServerIp;
+	
+	@Autowired
+	MyAppProperties props;
+	
+	@Component
+	@ConfigurationProperties(prefix = "myapp")
+	@Getter
+	@Setter
+	public static class MyAppProperties {
+		private String name;
+		private String description;
+		private String serverIp;
+	}
+	
+	@Bean
+	CommandLineRunner myappValues() {
+		return args -> {
+			log.info(" > 서버 IP: " + myServerIp);
+			log.info(" > 애플리케이션명: " + props.getName());
+			log.info(" > 애플리케이션 정보: " + props.getDescription());
 		};
 	}
 	
