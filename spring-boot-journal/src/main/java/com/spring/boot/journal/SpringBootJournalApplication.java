@@ -1,20 +1,62 @@
 package com.spring.boot.journal;
 
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import java.io.PrintStream;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.Banner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import com.spring.boot.journal.domain.Journal;
 import com.spring.boot.journal.repository.JournalRepository;
 
-@SpringBootApplication
-public class SpringBootJournalApplication {
+@SpringBootApplication(exclude={ActiveMQAutoConfiguration.class})
+public class SpringBootJournalApplication implements CommandLineRunner, ApplicationRunner{
+	
+	private Logger log = LoggerFactory.getLogger(SpringBootJournalApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBootJournalApplication.class, args);
+		SpringApplication app = new SpringApplication(SpringBootJournalApplication.class);
+
+		// 더 많은 기능은 여기에 추가가 가능합니다.
+		app.setBanner(new Banner() {
+
+			@Override
+			public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
+				out.print("\n\n\t나만의 멋진 배너랍니다!\n\n".toUpperCase());
+			}
+			
+		});
+		
+		Logger log = LoggerFactory.getLogger(SpringBootJournalApplication.class);
+		app.addListeners(new ApplicationListener<ApplicationEvent>() {
+
+			@Override
+			public void onApplicationEvent(ApplicationEvent event) {
+				log.info("#### > " + event.getClass().getCanonicalName());
+				
+				if (event.getClass().equals(ApplicationReadyEvent.class)) {
+					log.info("***** 스프링 부트 어플리케이션이 정상적으로 실행됬습니다. *****");
+				}
+			}
+			
+		});
+		
+		app.run(args);
 	}
 	
 	@Bean
@@ -41,5 +83,61 @@ public class SpringBootJournalApplication {
 					.date("02/08/2017")
 					.build());
 		};
+	}
+	
+	@Bean
+	String info() {
+		return "그냥 간단한 문자열 빈 입니다.";
+	}
+	
+	@Autowired
+	String info;
+
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		log.info("## > ApplicationRunner 구현체...");
+		log.info("info 빈에 액세스: " + info);
+		args.getNonOptionArgs().forEach(file -> log.info(file));
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		log.info("## > CommandLineRunner 구현체...");
+		log.info("info 빈에 액세스: " + info);
+		for (String arg : args) {
+			log.info(arg);
+		}
+	}
+	
+	@Bean
+	CommandLineRunner myMethod() {
+		return args -> {
+			log.info("## > CommandLineRunner 구현체... 람다 사용");
+			log.info("info 빈에 액세스: " + info);
+			for (String arg : args) {
+				log.info(arg);
+			}
+		};
+	}
+	
+}
+
+@Component
+class MyComponent {
+	
+	private static final Logger log = LoggerFactory.getLogger(MyComponent.class);
+	
+	@Autowired
+	public MyComponent(ApplicationArguments args) {
+		boolean enable = args.containsOption("enable");
+		if (enable) {
+			log.info("## > enable 옵션을 주셨네요!");
+		}
+		
+		List<String> _args = args.getNonOptionArgs();
+		log.info("## > 다른 인자...");
+		if (!_args.isEmpty()) {
+			_args.forEach(file -> log.info(file));
+		}
 	}
 }
