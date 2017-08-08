@@ -14,6 +14,7 @@ dependencies {
 	    compile 'org.springframework:spring-jdbc:3.1.2.RELEASE'
 	    compile 'org.springframework:spring-oxm:3.1.2.RELEASE'
 	    testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
+	    testCompile group: 'org.junit', name: 'com.springsource.org.junit', version: '4.7.0'  
 	    compile 'org.springframework:org.springframework.transaction:3.1.2.RELEASE'
 
 		compile group: 'org.hsqldb', name: 'com.springsource.org.hsqldb', version: '1.8.0.9'
