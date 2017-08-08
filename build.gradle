@@ -17,6 +17,6 @@ allprojects {
 
 subprojects {
 	dependencies {
-		testCompile group: 'org.junit', name: 'com.springsource.org.junit', version: '4.7.0'    
+        // nothing
 	}
 }

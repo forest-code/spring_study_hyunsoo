@@ -15,14 +15,15 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.util.List;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.iterableWithSize;
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,18 +31,17 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@WebAppConfiguration(value = "src/main/java")
+@WebAppConfiguration
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SpringBootJournalTestApplicationTests {
+public class SpringBootWebApplicationTests {
 
     private final String SPRING_BOOT_MATCH = "스프링 부트";
-    private final String CLOUD_MATCH = "클라우드";
+    private final String CLOUD_MATCH = "Cloud";
 
     @SuppressWarnings("rawtypes")
     private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-                                                    MediaType.APPLICATION_JSON.getSubtype(),
+    private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON,
                                                     Charset.forName("utf8"));
 
     private MockMvc mockMvc;
@@ -50,10 +50,12 @@ public class SpringBootJournalTestApplicationTests {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
-                converter -> converter instanceof MappingJackson2HttpMessageConverter
-        ).findAny().get();
+    void setConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                this.mappingJackson2HttpMessageConverter = converter;
+            }
+        }
     }
 
     @Before
@@ -72,7 +74,9 @@ public class SpringBootJournalTestApplicationTests {
 
     @Test
     public void findByTitle() throws Exception {
-        mockMvc.perform(get("/journal/findBy/title/" + CLOUD_MATCH))
+        String url = "/journal/findBy/title/" + CLOUD_MATCH;
+        System.out.println(url);
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(jsonPath("$", iterableWithSize(1)))

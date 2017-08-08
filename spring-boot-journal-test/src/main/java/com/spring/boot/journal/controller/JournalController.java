@@ -21,7 +21,7 @@ public class JournalController {
             entries.add(new JournalEntry("스프링 부트 입문", "01/01/2016", "오늘부터 스프링 부트를 배웠다."));
             entries.add(new JournalEntry("간단한 스프링 부트 프로젝트", "01/02/2016", "스프링 부트 프로젝트를 처음 만들어보았다."));
             entries.add(new JournalEntry("스프링 부트 해부", "02/01/2016", "스프링 부트를 자세히 살펴보았다."));
-            entries.add(new JournalEntry("스프링 부트 클라우드", "03/01/2016", "클라우드 파운드리를 응용한 스프링 부트를 공부했다."));
+            entries.add(new JournalEntry("스프링 부트 Cloud", "03/01/2016", "클라우드 파운드리를 응용한 스프링 부트를 공부했다."));
         } catch (ParseException e) {
             e.printStackTrace();
         }

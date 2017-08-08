@@ -9,4 +9,5 @@ public class SpringBootJournalTestApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootJournalTestApplication.class, args);
 	}
+
 }
