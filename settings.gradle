@@ -17,3 +17,5 @@ include 'services:webservice'
 
 rootProject.name = 'toby_spring_study_hyunsoo'
 include 'vol1', 'vol2', 'spring-boot-journal'
+include 'spring-boot-journal-jdbc'
+include 'spring-boot-journal-test'
