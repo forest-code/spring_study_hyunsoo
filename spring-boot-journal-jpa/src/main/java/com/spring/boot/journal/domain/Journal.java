@@ -12,7 +12,6 @@ import java.util.Date;
  */
 @Entity
 @NoArgsConstructor
-@ToString
 @EqualsAndHashCode
 public class Journal {
 
@@ -46,5 +45,21 @@ public class Journal {
         this.title = title;
         this.created = format.parse(date);
         this.summary = summary;
+    }
+    
+    public String toString() {
+        StringBuilder value = new StringBuilder("JournalEntry(");
+
+        value.append("Id: ");
+        value.append(this.id);
+        value.append(", 제목: ");
+        value.append(this.title);
+        value.append(", 요약: ");
+        value.append(this.summary);
+        value.append(", 작성일자: ");
+        value.append(this.getCreatedAsShort());
+        value.append(")");
+
+        return value.toString();
     }
 }
