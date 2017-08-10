@@ -28,6 +28,9 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	
+	compile('org.springframework.data:spring-data-rest-hal-browser')
+	
+	
 	compile('org.projectlombok:lombok')
 	compile('mysql:mysql-connector-java')
 	
