@@ -1,9 +1,3 @@
--- USERS IN JOURNAL
-INSERT INTO ACCOUNT(account_name, password) VALUES ('springboot', 'isawesome');
-INSERT INTO ACCOUNT(account_name, password) VALUES ('springsecurity', 'isawesometoo');
-
-
--- JOURNAL DATA
 INSERT INTO ENTRY(title, summary, created) VALUES ('스프링 부트 입문', '오늘부터 스프링 부트를 배웠다.', '2016-01-02 00:00:00.00');
 INSERT INTO ENTRY(title, summary, created) VALUES ('간단한 스프링 부트 프로젝트', '스프링 부트 프로젝트를 처음 만들어봤다.', '2016-01-03 00:00:00.00');
 INSERT INTO ENTRY(title, summary, created) VALUES ('스프링 부트 해부', '스프링 부트를 자세히 살펴보았다.', '2016-02-02 00:00:00.00');
