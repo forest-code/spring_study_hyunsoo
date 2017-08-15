@@ -12,6 +12,7 @@ import com.spring.boot.journal.repository.JournalRepository;
 public class JournalController {
 	
 	private static final String VIEW_INDEX = "index";
+	private static final String VIEW_LOGIN = "login";
 	
 	@Autowired
 	private JournalRepository journalRepository;
@@ -20,6 +21,12 @@ public class JournalController {
 	public ModelAndView index(ModelAndView mv) {
 		mv.setViewName(VIEW_INDEX);
 		mv.addObject("journal", journalRepository.findAll());
+		return mv;
+	}
+	
+	@RequestMapping(value = "/login")
+	public ModelAndView login(ModelAndView mv) {
+		mv.setViewName(VIEW_LOGIN);
 		return mv;
 	}
 

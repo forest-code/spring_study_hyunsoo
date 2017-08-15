@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en-US" xmlns:th="http://www.thymeleaf.org">
+<html lang="en-US" xmlns:th="http://www.thymeleaf.org"
+                   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 	<head>
 		<meta charset="utf-8"></meta>
 		<meta http-equiv="Content-Type" content="text/html"></meta>
@@ -12,7 +13,14 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>스프링 부트 일기</h1>
+			<h1 style="color:#FFFFFF">스프링 부트 일기</h1>
+			
+			<p sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<input type="submit" value="로그아웃"/>
+				</form>
+			</p>
+			
 			<ul class="timeline">
 				<th:block th:each="entry, status : ${journal}">
 					<li th:attr="class=${status.odd} ? timeline-inverted : ''">
