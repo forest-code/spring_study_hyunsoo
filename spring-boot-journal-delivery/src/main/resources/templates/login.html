@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"></meta>
+	<title>Login</title>
+	
+	<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" media="all" href="css/bootstrap-glyphicons.css"/>
+	<link rel="stylesheet" type="text/css" media="all" href="css/style.css"/>
+</head>
+<body>
+	<div class="container">
+		<div class="content">
+			<p th:if="${param.logout}" class="alert" style="color:#FFFFFF">로그아웃 되었습니다.</p>
+			<p th:if="${param.error}" class="alert alert-error" style="color:#FFFFFF">오류가 발생했습니다. 다시 시도하세요.</p>
+			
+			<h2 style="color:#FFFFFF">스프링 부트 일기 로그인</h2>
+			<form name="form" th:action="@{/login}" action="/login" method="POST">
+				<input type="text" name="username" value="" placeholder="Username"/>
+				<input type="password" name="password" placeholder="Password"/>
+				<input type="submit" id="login" value="Login" class="btn btn-primary"/>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
