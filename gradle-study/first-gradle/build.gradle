@@ -1,0 +1,9 @@
+/*
+아래와 같이 버전정보를 입력한 후 gradle properties를 입력하면 version란에서 설정한 값을
+확인할 수 있다.
+*/
+version = '1.0.19'
+
+task hello << {
+  println 'hello Gradle world!'
+}
