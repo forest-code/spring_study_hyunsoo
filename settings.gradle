@@ -15,7 +15,7 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'toby_spring_study_hyunsoo'
+rootProject.name = 'spring_study_hyunsoo'
 include 'vol1', 'vol2'
 include 'spring-boot-journal'
 include 'spring-boot-journal-jdbc'

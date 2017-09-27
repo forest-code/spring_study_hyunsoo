@@ -6,24 +6,46 @@
  * user guide available at https://docs.gradle.org/4.2/userguide/java_library_plugin.html
  */
 
-// Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+// (1) Tomcat 플러그인 사용을 위한 설정
+buildscript {
+  repositories {
+    jcenter()
+  }
 
-// In this section you declare where to find the dependencies of your project
+  dependencies {
+    classpath 'com.bmuschko:gradle-tomcat-plugin:2.3'
+  }
+}
+
+// (2) war 플러그인 적용
+apply plugin: 'war'
+
+// (3) tomcat 플러그인 적용
+apply plugin: 'com.bmuschko.tomcat'
+
+// (2) war 플러그인에서 확장하였으므로 모든 task를 포함하기 때문에 주석 처리함.
+//apply plugin: 'java-library'
+
+
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:22.0'
+    // (4) 의존관계에 Java EE 6의 API 추가
+    providedCompile 'javax:javaee-web-api:6.0'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    testCompile 'junit:junit:4.11'
 
-    // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    // (5) tomcat 실행에 필요한 의존 라이브러리 설정
+    def tomcatVersion = '7.0.52'
+
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+    "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+      exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    }
+
 }
-
