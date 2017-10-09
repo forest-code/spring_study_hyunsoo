@@ -1,0 +1,20 @@
+apply plugin: 'java'
+def defaultEncoding = 'UTF-8'
+
+// * before *
+//compileJava.options.encoding = defaultEncoding
+// * after *
+[compileJava, compileTestJava]*.options*.encoding = defaultEncoding
+
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile "junit:junit:4.11"
+}

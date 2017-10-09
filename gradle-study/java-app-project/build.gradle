@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+def defaultEncoding = 'UTF-8'
+compileJava.options.encoding = defaultEncoding
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+mainClassName = 'com.example.cli.SimpleCalc'
+applicationName = 'SimpleCalc'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'commons-cli:commons-cli:1.2'
+}
+
+run {
+    standardInput = System.in
+}
+
